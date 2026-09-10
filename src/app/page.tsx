@@ -6,10 +6,10 @@
  */
 
 // server side, DB code and actions
-import { createTodo } from "@/actions/todo/createTodo/createTodo";
-import { deleteTodo } from "@/actions/todo/deleteTodo/deleteTodo";
-import { listTodos } from "@/actions/todo/listTodos/listTodos";
-import { updateTodo } from "@/actions/todo/updateTodo/updateTodo";
+import { createTodo } from "@/actions/plant/createPlant/createPlant";
+import { deleteTodo } from "@/actions/plant/listPlants/listPlants";
+import { listTodos } from "@/actions/plant/waterPlants/waterPlants";
+import { updateTodo } from "@/actions/plant/identifyPlant/identifyPlant";
 
 // the main client component
 import { TodoPage } from "@/components/pages/TodoPage/TodoPage";
