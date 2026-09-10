@@ -1,112 +1,148 @@
-# Todoish — course sample
 
-**Todoish** is a single-user todo sample for the course, not a production app.
+# 🌱 Plant Care Dashboard
 
-Coding conventions for this repo live in [`AGENTS.md`](./AGENTS.md).
+**Never forget to water a plant again — and get guilt-tripped by it if you do.**
 
-## Stack
+[![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-DB-07405e?logo=sqlite&logoColor=white)](https://sqlite.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-- [React 19](https://react.dev/) — UI library; `src/components/`
-- [Next.js](https://nextjs.org/) — App Router; `src/app/page.tsx`, `src/app/layout.tsx`
-- [Prisma](https://www.prisma.io/) — SQLite ORM; `prisma/schema.prisma`, `src/prisma/prismaClient.ts`
-- [Storybook](https://storybook.js.org/) — UI in isolation; `.storybook/`, colocated `*.stories.tsx`
-- [Atomic Design](https://atomicdesign.bradfrost.com/chapter-2/) — UI folder map; `src/components/{atoms,molecules,organisms,templates,pages}`
-- [Tailwind CSS](https://tailwindcss.com/) — utility classes; `src/app/globals.css`
-- [Vite](https://vite.dev/) — Storybook and Vitest toolchain, not the Next.js bundler; `.storybook/main.ts`, `vitest.config.ts`
-- [Vitest](https://vitest.dev/) — component/story/action tests; colocated `*.test.tsx`, `tests/actions/`
-- [Playwright](https://playwright.dev/) — e2e; `tests/e2e/`, `playwright.config.ts`
-- SQLite — local DB used by Prisma; `prisma/dev.db` is gitignored and created on migrate; `prisma/schema.prisma`
+---
 
-## Setup
+Upload a photo of your plant, get its species identified and its care
+info pulled up automatically, then track watering through a dashboard
+where each plant has its own mood, streak, and personality.
 
-1. Install Node.js and npm. Clone this repo.
-2. `npm install`
-3. Copy `.env.example` to `.env` (do not commit `.env`)
-4. `npm run prisma:generate`
-5. `npm run prisma:migrate` (applies existing migrations; creates `prisma/dev.db`)
-6. `npm run dev` → [http://localhost:3000/](http://localhost:3000/)
+Built as a hackathon project for **Frontend Development** (Inholland),
+Weeks 1–4 (Next.js + TypeScript portion of the course).
 
-## Scripts
+## 📋 Table of Contents
 
-See `./package.json`
-Execute using `npm run [name of script]`
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Project Artifacts](#-project-artifacts)
+- [Team](#-team)
+- [Course](#-course)
 
-- `dev` — Next.js app at http://localhost:3000/
-- `storybook` — Storybook UI on port 6006
-- `test` — Vitest (storybook, components, and actions projects)
-- `test:e2e` — Playwright e2e
-- `prisma:migrate` — apply existing migrations; creates `prisma/dev.db`
-- `prisma:generate` — generate the Prisma client
+## ✨ Features
 
-## File structure
+- 📸 **Photo identification** — upload a photo of your plant and the app auto-identifies the species
+- 💧 **Care info lookup** — pulls up how often to water it and what light/climate it likes
+- 🪴 **Mood-based dashboard cards** — healthy / needs water / overdue, based on days since last watered
+- 🗣️ **Personality voice lines** — each plant guilt-trips or hypes you up depending on its mood, e.g. a dramatic fern going *"9 days. I've counted. I'm FINE."*
+- ✅ **One-tap watering** — "Mark as watered" resets the countdown
+- 🔥 **Streaks** — watering on time builds a streak per plant, gamifying the habit
+- 🛟 **Graceful fallback** — if photo identification fails or is rate-limited, pick the plant from a preset list instead, so a live demo never breaks
+
+## 🛠 Tech Stack
+
+| Layer | Choice |
+|---|---|
+| Framework | [Next.js](https://nextjs.org/) (App Router) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| ORM | [Prisma](https://www.prisma.io/) |
+| Database | [SQLite](https://sqlite.org/) |
+| Plant ID | [Pl@ntNet API](https://my.plantnet.org/) |
+| Data mutations | Next.js Server Actions (no separate API layer) |
+
+## 📁 Project Structure
 
 ```
-.
-├── src/
-│   ├── app/                         # routes (`page.tsx` is `/`)
-│   │   ├── page.tsx                 # `/` — loads todos, injects Server Actions
-│   │   ├── layout.tsx               # root layout and document metadata
-│   │   └── globals.css              # Tailwind entry
-│   ├── components/                  # atomic UI
-│   │   └── atoms/Button/Button.tsx  # canonical atom
-│   ├── actions/                     # Server Actions
-│   │   └── todo/createTodo/createTodo.ts
-│   ├── prisma/prismaClient.ts       # Prisma client used by actions
-│   └── generated/prisma/            # generated client; do not edit
-├── prisma/                          # schema and migrations
-├── .storybook/                      # Storybook config
-├── tests/
-│   ├── actions/                     # action tests (`prisma/test.db`)
-│   └── e2e/                         # Playwright (`prisma/dev.db`)
-├── specs/                           # SDD specs
-├── vitest.config.ts                 # Vitest projects (storybook, components, actions)
-├── playwright.config.ts             # Playwright e2e config
-└── AGENTS.md                        # conventions for this repo
+src/
+  actions/
+    plant/
+      createPlant/createPlant.ts
+      listPlants/listPlants.ts
+      waterPlant/waterPlant.ts
+      identifyPlant/identifyPlant.ts
+  app/
+    page.tsx
+  components/
+    pages/
+      PlantDashboard/PlantDashboard.tsx
+    PlantCard/PlantCard.tsx
+    UploadForm/UploadForm.tsx
+  lib/
+    careData.ts
+    plantVoice.ts
+    moodLogic.ts
+  prisma/
+    schema.prisma
+tests/
+  actions/
+  e2e/
+specs/
+  001-plant-dashboard/
+    spec.md
+    plan.md
+AGENTS.md
 ```
 
-To explore the codebase, start with `src\app\page.tsx`.
+## 🚀 Getting Started
 
-Review Prisma Schema in `prisma\schema.prisma`
+### Prerequisites
 
-## Adding a feature (spec-driven development)
+- Node.js 18+
+- A free [Pl@ntNet API key](https://my.plantnet.org/)
 
-When adding a feature with an AI agent, follow the spec layout, invoke the skills explicitly, and use the process below.
+### Installation
 
-### Spec layout
+```bash
+git clone <your-repo-url>
+cd plant-care-dashboard
+npm install
+```
 
-- `specs/spec_template.md` — starting headings for a new spec
-- `specs/NNN-kebab-slug/` — one folder per spec
-  - `spec.md` — what to build and constraints (Context, Goals, Requirements, Out of scope)
-  - `plan.md` — how to build (files, APIs, order); written by **spec-plan**, not by hand during grill
-  - `task.md` — checkable implementer work; written by **spec-plan**, executed by **spec-execute**
-- `.agents/skills/spec-grill-me/`, `spec-plan/`, `spec-execute/` — the SDD skills
+### Environment variables
 
-New folder names use the next unused 3-digit prefix, then a kebab-case slug (`NNN-kebab-slug`).
+Copy `.env.example` to `.env` and add your API key:
 
-### Skills
+```bash
+cp .env.example .env
+```
 
-Each skill must be invoked explicitly:
+```env
+PLANTNET_API_KEY=your_key_here
+DATABASE_URL="file:./dev.db"
+```
 
-`/spec-grill-me @specs/NNN-slug/spec.md`
+### Database
 
-`/spec-plan @specs/NNN-slug/spec.md`
+```bash
+npx prisma migrate dev --name init
+```
 
-`/spec-execute @specs/NNN-slug/task.md`
+### Run it
 
-- **spec-grill-me** — questions in rounds, then updates `spec.md` in place until Requirements and Out of scope are implementable. Does not implement. Does not create `plan.md` or `task.md`.
-- **spec-plan** — reads an implementable `spec.md` and writes colocated `plan.md` and `task.md`. Does not implement. Does not edit the spec. If those files already exist, ask before overwriting.
-- **spec-execute** — implements remaining unchecked items in `task.md` in order (including Verify) and marks them `[x]` as it goes. Does not rewrite spec, plan, or tasks (except checkboxes).
+```bash
+npm run dev
+```
 
-If `spec.md` is still too vague, **spec-plan** should stop and tell you to run **spec-grill-me** first. If `task.md` is missing or too vague, **spec-execute** should stop and tell you to run **spec-plan** first.
+Open [http://localhost:3000](http://localhost:3000) 🌿
 
-### Add-a-feature process
+## 📄 Project Artifacts
 
-Always this order; do not skip **spec-grill-me**.
+This project follows the Spec-Driven Development workflow from the
+course reading:
 
-1. Copy `specs/spec_template.md` to `specs/NNN-kebab-slug/spec.md` and draft the headings (can be rough).
-2. Run **spec-grill-me** on that spec until Requirements and Out of scope are specific enough to implement without guessing (or stop is prompted).
-3. Run **spec-plan** on that spec → `plan.md` and `task.md`.
-4. Run **spec-execute** on that spec’s `task.md` → implement remaining tasks, including Verify.
-5. Encode only **durable** conventions in `AGENTS.md` (leave the Next.js block at the bottom unchanged). Do not dump the whole spec into `AGENTS.md`.
+- [`specs/001-plant-dashboard/spec.md`](./specs/001-plant-dashboard/spec.md) — goal, constraints, acceptance criteria
+- [`specs/001-plant-dashboard/plan.md`](./specs/001-plant-dashboard/plan.md) — technical approach and trade-offs
 
-One skill at a time. Do not hand-write `plan.md` / `task.md` instead of **spec-plan**.
+## 👥 Team
+
+- [Your name here]
+- [Teammate's name here]
+
+## 🎓 Course
+
+Frontend Development, Inholland — [course materials](https://github.com/danpaul/frontend_development_course)
+
+---
+
+<div align="center">
+<sub>Built with 🌱 and mild plant-related guilt.</sub>
+</div>
