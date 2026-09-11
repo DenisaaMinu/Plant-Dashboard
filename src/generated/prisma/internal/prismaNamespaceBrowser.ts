@@ -51,7 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Todo: 'Todo'
+  Plant: 'Plant'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -67,14 +67,20 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const TodoScalarFieldEnum = {
+export const PlantScalarFieldEnum = {
   id: 'id',
-  createdAt: 'createdAt',
-  title: 'title',
-  description: 'description'
+  name: 'name',
+  species: 'species',
+  photoUrl: 'photoUrl',
+  wateringFrequency: 'wateringFrequency',
+  lightPreference: 'lightPreference',
+  personality: 'personality',
+  lastWateredAt: 'lastWateredAt',
+  streak: 'streak',
+  createdAt: 'createdAt'
 } as const
 
-export type TodoScalarFieldEnum = (typeof TodoScalarFieldEnum)[keyof typeof TodoScalarFieldEnum]
+export type PlantScalarFieldEnum = (typeof PlantScalarFieldEnum)[keyof typeof PlantScalarFieldEnum]
 
 
 export const SortOrder = {

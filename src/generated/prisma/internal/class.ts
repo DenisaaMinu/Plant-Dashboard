@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.10.0",
   "engineVersion": "0edf323efd1d98336f3f0a68684b56f689b900d3",
   "activeProvider": "sqlite",
-  "inlineSchema": "datasource db {\n  provider = \"sqlite\"\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\nmodel Todo {\n  id          Int      @id @default(autoincrement())\n  createdAt   DateTime @default(now())\n  title       String\n  description String?\n}\n",
+  "inlineSchema": "datasource db {\n  provider = \"sqlite\"\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\nmodel Plant {\n  id                Int      @id @default(autoincrement())\n  name              String\n  species           String?\n  photoUrl          String?\n  wateringFrequency Int\n  lightPreference   String\n  personality       String   @default(\"chill\")\n  lastWateredAt     DateTime @default(now())\n  streak            Int      @default(0)\n  createdAt         DateTime @default(now())\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Todo\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null,\"schema\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Plant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"species\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"photoUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wateringFrequency\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lightPreference\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"personality\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastWateredAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"streak\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null,\"schema\":null}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[\"where\",\"Todo.findUnique\",\"Todo.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"Todo.findFirst\",\"Todo.findFirstOrThrow\",\"Todo.findMany\",\"data\",\"Todo.createOne\",\"Todo.createMany\",\"Todo.createManyAndReturn\",\"Todo.updateOne\",\"Todo.updateMany\",\"Todo.updateManyAndReturn\",\"create\",\"update\",\"Todo.upsertOne\",\"Todo.deleteOne\",\"Todo.deleteMany\",\"having\",\"_count\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"Todo.groupBy\",\"Todo.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"createdAt\",\"title\",\"description\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"not\",\"set\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
-  graph: "NwsQBxwAACkAMB0AAAQAEB4AACkAMB8CAAAAASBAACsAISEBACwAISIBAC0AIQEAAAABACABAAAAAQAgBxwAACkAMB0AAAQAEB4AACkAMB8CACoAISBAACsAISEBACwAISIBAC0AIQEiAAAuACADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAEHwIAAAABIEAAAAABIQEAAAABIgEAAAABAQgAAAkAIAQfAgAAAAEgQAAAAAEhAQAAAAEiAQAAAAEBCAAACwAwAQgAAAsAMAQfAgA3ACEgQAA0ACEhAQA1ACEiAQA2ACECAAAAAQAgCAAADgAgBB8CADcAISBAADQAISEBADUAISIBADYAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgBhUAAC8AIBYAADAAIBcAADMAIBgAADIAIBkAADEAICIAAC4AIAccAAAaADAdAAAXABAeAAAaADAfAgAbACEgQAAcACEhAQAdACEiAQAeACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAccAAAaADAdAAAXABAeAAAaADAfAgAbACEgQAAcACEhAQAdACEiAQAeACENFQAAIwAgFgAAKAAgFwAAIwAgGAAAIwAgGQAAIwAgIwIAAAABJAIAAAAEJQIAAAAEJgIAAAABJwIAAAABKAIAAAABKQIAAAABLQIAJwAhCxUAACMAIBgAACYAIBkAACYAICNAAAAAASRAAAAABCVAAAAABCZAAAAAASdAAAAAAShAAAAAASlAAAAAAS1AACUAIQ4VAAAjACAYAAAkACAZAAAkACAjAQAAAAEkAQAAAAQlAQAAAAQmAQAAAAEnAQAAAAEoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAAAAEtAQAiACEOFQAAIAAgGAAAIQAgGQAAIQAgIwEAAAABJAEAAAAFJQEAAAAFJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAHwAhDhUAACAAIBgAACEAIBkAACEAICMBAAAAASQBAAAABSUBAAAABSYBAAAAAScBAAAAASgBAAAAASkBAAAAASoBAAAAASsBAAAAASwBAAAAAS0BAB8AIQgjAgAAAAEkAgAAAAUlAgAAAAUmAgAAAAEnAgAAAAEoAgAAAAEpAgAAAAEtAgAgACELIwEAAAABJAEAAAAFJQEAAAAFJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAIQAhDhUAACMAIBgAACQAIBkAACQAICMBAAAAASQBAAAABCUBAAAABCYBAAAAAScBAAAAASgBAAAAASkBAAAAASoBAAAAASsBAAAAASwBAAAAAS0BACIAIQgjAgAAAAEkAgAAAAQlAgAAAAQmAgAAAAEnAgAAAAEoAgAAAAEpAgAAAAEtAgAjACELIwEAAAABJAEAAAAEJQEAAAAEJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAJAAhCxUAACMAIBgAACYAIBkAACYAICNAAAAAASRAAAAABCVAAAAABCZAAAAAASdAAAAAAShAAAAAASlAAAAAAS1AACUAIQgjQAAAAAEkQAAAAAQlQAAAAAQmQAAAAAEnQAAAAAEoQAAAAAEpQAAAAAEtQAAmACENFQAAIwAgFgAAKAAgFwAAIwAgGAAAIwAgGQAAIwAgIwIAAAABJAIAAAAEJQIAAAAEJgIAAAABJwIAAAABKAIAAAABKQIAAAABLQIAJwAhCCMIAAAAASQIAAAABCUIAAAABCYIAAAAAScIAAAAASgIAAAAASkIAAAAAS0IACgAIQccAAApADAdAAAEABAeAAApADAfAgAqACEgQAArACEhAQAsACEiAQAtACEIIwIAAAABJAIAAAAEJQIAAAAEJgIAAAABJwIAAAABKAIAAAABKQIAAAABLQIAIwAhCCNAAAAAASRAAAAABCVAAAAABCZAAAAAASdAAAAAAShAAAAAASlAAAAAAS1AACYAIQsjAQAAAAEkAQAAAAQlAQAAAAQmAQAAAAEnAQAAAAEoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAAAAEtAQAkACELIwEAAAABJAEAAAAFJQEAAAAFJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAAAABLQEAIQAhAAAAAAAAAS5AAAAAAQEuAQAAAAEBLgEAAAABBS4CAAAAAS8CAAAAATACAAAAATECAAAAATICAAAAAQAAAAAFFQAGFgAHFwAIGAAJGQAKAAAAAAAFFQAGFgAHFwAIGAAJGQAKAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGhgFGxkL"
+  strings: JSON.parse("[\"where\",\"Plant.findUnique\",\"Plant.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"Plant.findFirst\",\"Plant.findFirstOrThrow\",\"Plant.findMany\",\"data\",\"Plant.createOne\",\"Plant.createMany\",\"Plant.createManyAndReturn\",\"Plant.updateOne\",\"Plant.updateMany\",\"Plant.updateManyAndReturn\",\"create\",\"update\",\"Plant.upsertOne\",\"Plant.deleteOne\",\"Plant.deleteMany\",\"having\",\"_count\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"Plant.groupBy\",\"Plant.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"name\",\"species\",\"photoUrl\",\"wateringFrequency\",\"lightPreference\",\"personality\",\"lastWateredAt\",\"streak\",\"createdAt\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"set\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "NwsQDRwAACkAMB0AAAQAEB4AACkAMB8CAAAAASABACsAISEBACwAISIBACwAISMCACoAISQBACsAISUBACsAISZAAC0AIScCACoAIShAAC0AIQEAAAABACABAAAAAQAgDRwAACkAMB0AAAQAEB4AACkAMB8CACoAISABACsAISEBACwAISIBACwAISMCACoAISQBACsAISUBACsAISZAAC0AIScCACoAIShAAC0AIQIhAAAuACAiAAAuACADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAKHwIAAAABIAEAAAABIQEAAAABIgEAAAABIwIAAAABJAEAAAABJQEAAAABJkAAAAABJwIAAAABKEAAAAABAQgAAAkAIAofAgAAAAEgAQAAAAEhAQAAAAEiAQAAAAEjAgAAAAEkAQAAAAElAQAAAAEmQAAAAAEnAgAAAAEoQAAAAAEBCAAACwAwAQgAAAsAMAofAgA2ACEgAQA0ACEhAQA1ACEiAQA1ACEjAgA2ACEkAQA0ACElAQA0ACEmQAA3ACEnAgA2ACEoQAA3ACECAAAAAQAgCAAADgAgCh8CADYAISABADQAISEBADUAISIBADUAISMCADYAISQBADQAISUBADQAISZAADcAIScCADYAIShAADcAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgBxUAAC8AIBYAADAAIBcAADMAIBgAADIAIBkAADEAICEAAC4AICIAAC4AIA0cAAAaADAdAAAXABAeAAAaADAfAgAbACEgAQAcACEhAQAdACEiAQAdACEjAgAbACEkAQAcACElAQAcACEmQAAeACEnAgAbACEoQAAeACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIA0cAAAaADAdAAAXABAeAAAaADAfAgAbACEgAQAcACEhAQAdACEiAQAdACEjAgAbACEkAQAcACElAQAcACEmQAAeACEnAgAbACEoQAAeACENFQAAIAAgFgAAKAAgFwAAIAAgGAAAIAAgGQAAIAAgKQIAAAABKgIAAAAEKwIAAAAELAIAAAABLQIAAAABLgIAAAABLwIAAAABMAIAJwAhDhUAACAAIBgAACYAIBkAACYAICkBAAAAASoBAAAABCsBAAAABCwBAAAAAS0BAAAAAS4BAAAAAS8BAAAAATABACUAITEBAAAAATIBAAAAATMBAAAAAQ4VAAAjACAYAAAkACAZAAAkACApAQAAAAEqAQAAAAUrAQAAAAUsAQAAAAEtAQAAAAEuAQAAAAEvAQAAAAEwAQAiACExAQAAAAEyAQAAAAEzAQAAAAELFQAAIAAgGAAAIQAgGQAAIQAgKUAAAAABKkAAAAAEK0AAAAAELEAAAAABLUAAAAABLkAAAAABL0AAAAABMEAAHwAhCxUAACAAIBgAACEAIBkAACEAIClAAAAAASpAAAAABCtAAAAABCxAAAAAAS1AAAAAAS5AAAAAAS9AAAAAATBAAB8AIQgpAgAAAAEqAgAAAAQrAgAAAAQsAgAAAAEtAgAAAAEuAgAAAAEvAgAAAAEwAgAgACEIKUAAAAABKkAAAAAEK0AAAAAELEAAAAABLUAAAAABLkAAAAABL0AAAAABMEAAIQAhDhUAACMAIBgAACQAIBkAACQAICkBAAAAASoBAAAABSsBAAAABSwBAAAAAS0BAAAAAS4BAAAAAS8BAAAAATABACIAITEBAAAAATIBAAAAATMBAAAAAQgpAgAAAAEqAgAAAAUrAgAAAAUsAgAAAAEtAgAAAAEuAgAAAAEvAgAAAAEwAgAjACELKQEAAAABKgEAAAAFKwEAAAAFLAEAAAABLQEAAAABLgEAAAABLwEAAAABMAEAJAAhMQEAAAABMgEAAAABMwEAAAABDhUAACAAIBgAACYAIBkAACYAICkBAAAAASoBAAAABCsBAAAABCwBAAAAAS0BAAAAAS4BAAAAAS8BAAAAATABACUAITEBAAAAATIBAAAAATMBAAAAAQspAQAAAAEqAQAAAAQrAQAAAAQsAQAAAAEtAQAAAAEuAQAAAAEvAQAAAAEwAQAmACExAQAAAAEyAQAAAAEzAQAAAAENFQAAIAAgFgAAKAAgFwAAIAAgGAAAIAAgGQAAIAAgKQIAAAABKgIAAAAEKwIAAAAELAIAAAABLQIAAAABLgIAAAABLwIAAAABMAIAJwAhCCkIAAAAASoIAAAABCsIAAAABCwIAAAAAS0IAAAAAS4IAAAAAS8IAAAAATAIACgAIQ0cAAApADAdAAAEABAeAAApADAfAgAqACEgAQArACEhAQAsACEiAQAsACEjAgAqACEkAQArACElAQArACEmQAAtACEnAgAqACEoQAAtACEIKQIAAAABKgIAAAAEKwIAAAAELAIAAAABLQIAAAABLgIAAAABLwIAAAABMAIAIAAhCykBAAAAASoBAAAABCsBAAAABCwBAAAAAS0BAAAAAS4BAAAAAS8BAAAAATABACYAITEBAAAAATIBAAAAATMBAAAAAQspAQAAAAEqAQAAAAUrAQAAAAUsAQAAAAEtAQAAAAEuAQAAAAEvAQAAAAEwAQAkACExAQAAAAEyAQAAAAEzAQAAAAEIKUAAAAABKkAAAAAEK0AAAAAELEAAAAABLUAAAAABLkAAAAABL0AAAAABMEAAIQAhAAAAAAAAATQBAAAAAQE0AQAAAAEFNAIAAAABNQIAAAABNgIAAAABNwIAAAABOAIAAAABATRAAAAAAQAAAAAFFQAGFgAHFwAIGAAJGQAKAAAAAAAFFQAGFgAHFwAIGAAJGQAKAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGhgFGxkL"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -70,8 +70,8 @@ export interface PrismaClientConstructor {
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Todos
-   * const todos = await prisma.todo.findMany()
+   * // Fetch zero or more Plants
+   * const plants = await prisma.plant.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -94,8 +94,8 @@ export interface PrismaClientConstructor {
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Todos
- * const todos = await prisma.todo.findMany()
+ * // Fetch zero or more Plants
+ * const plants = await prisma.plant.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -189,14 +189,14 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.todo`: Exposes CRUD operations for the **Todo** model.
+   * `prisma.plant`: Exposes CRUD operations for the **Plant** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Todos
-    * const todos = await prisma.todo.findMany()
+    * // Fetch zero or more Plants
+    * const plants = await prisma.plant.findMany()
     * ```
     */
-  get todo(): Prisma.TodoDelegate<ExtArgs, { omit: OmitOpts }>;
+  get plant(): Prisma.PlantDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

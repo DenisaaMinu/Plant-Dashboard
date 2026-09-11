@@ -1,31 +1,8 @@
-/*
- * Next.js App Router route for `/`.
- * Loads todos and injects Server Actions into the page component.
- * 
- * This is the root page of the application.
- */
-
-// server side, DB code and actions
-import { createTodo } from "@/actions/plant/createPlant/createPlant";
-import { deleteTodo } from "@/actions/plant/listPlants/listPlants";
-import { listTodos } from "@/actions/plant/waterPlants/waterPlants";
-import { updateTodo } from "@/actions/plant/identifyPlant/identifyPlant";
-
-// the main client component
-import { TodoPage } from "@/components/pages/TodoPage/TodoPage";
-
-// Render this route on every request so listTodos() always returns current DB rows.
-export const dynamic = "force-dynamic";
-
-export default async function Home() {
-  const initialTodos = await listTodos();
-  // main client component with server side actions passed as props
+export default function Home() {
   return (
-    <TodoPage
-      initialTodos={initialTodos}
-      createTodo={createTodo}
-      updateTodo={updateTodo}
-      deleteTodo={deleteTodo}
-    />
+    <main>
+      <h1>Plant Care Dashboard</h1>
+      <p>🌱 coming soon</p>
+    </main>
   );
 }
