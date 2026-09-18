@@ -14,7 +14,7 @@ model Plant {
   wateringFrequency Int
   lightPreference   String
   personality       String   @default("chill")
-  lastWateredAt     DateTime @default(now())
+  lastWateredAt     DateTime?
   streak            Int      @default(0)
   createdAt         DateTime @default(now())
 }

@@ -2,8 +2,9 @@ export type PlantMood = "healthy" | "needsWaterSoon" | "overdue";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-export function getDaysSince(date: Date): number {
-  return Math.floor((Date.now() - date.getTime()) / MS_PER_DAY);
+export function getDaysSince(date: Date | null, now = Date.now()): number {
+  if (!date) return 0;
+  return Math.max(0, Math.floor((now - date.getTime()) / MS_PER_DAY));
 }
 
 export function getMood(daysSince: number, wateringFrequency: number): PlantMood {

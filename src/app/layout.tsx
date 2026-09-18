@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Todoish",
-  description:
-    "A single-user todo app used as sample code for a frontend course.",
+  title: "Plant Care Dashboard",
+  description: "A gentle dashboard for happier, healthier houseplants.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

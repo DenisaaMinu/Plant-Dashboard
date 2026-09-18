@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f7f2;
+  --foreground: #183127;
 }
 
 @theme inline {
@@ -12,15 +12,63 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(190, 226, 188, 0.5), transparent 30rem),
+    radial-gradient(circle at 92% 12%, rgba(248, 222, 171, 0.38), transparent 26rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+::selection {
+  background: #b9d9b2;
+  color: #183127;
+}
+
+input,
+select {
+  color: #183127;
+  background: #fffefb;
+}
+
+input::file-selector-button {
+  margin-right: 0.75rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #e4eee0;
+  padding: 0.55rem 0.8rem;
+  color: #28513b;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+progress {
+  accent-color: #4d9a62;
+}
+
+@keyframes voice-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translateY(0);
   }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.voice-bubble {
+  animation: voice-pulse 2.8s ease-in-out infinite;
+}
+
+button,
+input,
+select {
+  font: inherit;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

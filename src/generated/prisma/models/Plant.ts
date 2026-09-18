@@ -225,7 +225,7 @@ export type PlantGroupByOutputType = {
   wateringFrequency: number
   lightPreference: string
   personality: string
-  lastWateredAt: Date
+  lastWateredAt: Date | null
   streak: number
   createdAt: Date
   _count: PlantCountAggregateOutputType | null
@@ -261,7 +261,7 @@ export type PlantWhereInput = {
   wateringFrequency?: Prisma.IntFilter<"Plant"> | number
   lightPreference?: Prisma.StringFilter<"Plant"> | string
   personality?: Prisma.StringFilter<"Plant"> | string
-  lastWateredAt?: Prisma.DateTimeFilter<"Plant"> | Date | string
+  lastWateredAt?: Prisma.DateTimeNullableFilter<"Plant"> | Date | string | null
   streak?: Prisma.IntFilter<"Plant"> | number
   createdAt?: Prisma.DateTimeFilter<"Plant"> | Date | string
 }
@@ -274,7 +274,7 @@ export type PlantOrderByWithRelationInput = {
   wateringFrequency?: Prisma.SortOrder
   lightPreference?: Prisma.SortOrder
   personality?: Prisma.SortOrder
-  lastWateredAt?: Prisma.SortOrder
+  lastWateredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   streak?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -290,7 +290,7 @@ export type PlantWhereUniqueInput = Prisma.AtLeast<{
   wateringFrequency?: Prisma.IntFilter<"Plant"> | number
   lightPreference?: Prisma.StringFilter<"Plant"> | string
   personality?: Prisma.StringFilter<"Plant"> | string
-  lastWateredAt?: Prisma.DateTimeFilter<"Plant"> | Date | string
+  lastWateredAt?: Prisma.DateTimeNullableFilter<"Plant"> | Date | string | null
   streak?: Prisma.IntFilter<"Plant"> | number
   createdAt?: Prisma.DateTimeFilter<"Plant"> | Date | string
 }, "id">
@@ -303,7 +303,7 @@ export type PlantOrderByWithAggregationInput = {
   wateringFrequency?: Prisma.SortOrder
   lightPreference?: Prisma.SortOrder
   personality?: Prisma.SortOrder
-  lastWateredAt?: Prisma.SortOrder
+  lastWateredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   streak?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PlantCountOrderByAggregateInput
@@ -324,7 +324,7 @@ export type PlantScalarWhereWithAggregatesInput = {
   wateringFrequency?: Prisma.IntWithAggregatesFilter<"Plant"> | number
   lightPreference?: Prisma.StringWithAggregatesFilter<"Plant"> | string
   personality?: Prisma.StringWithAggregatesFilter<"Plant"> | string
-  lastWateredAt?: Prisma.DateTimeWithAggregatesFilter<"Plant"> | Date | string
+  lastWateredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plant"> | Date | string | null
   streak?: Prisma.IntWithAggregatesFilter<"Plant"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Plant"> | Date | string
 }
@@ -336,7 +336,7 @@ export type PlantCreateInput = {
   wateringFrequency: number
   lightPreference: string
   personality?: string
-  lastWateredAt?: Date | string
+  lastWateredAt?: Date | string | null
   streak?: number
   createdAt?: Date | string
 }
@@ -349,7 +349,7 @@ export type PlantUncheckedCreateInput = {
   wateringFrequency: number
   lightPreference: string
   personality?: string
-  lastWateredAt?: Date | string
+  lastWateredAt?: Date | string | null
   streak?: number
   createdAt?: Date | string
 }
@@ -361,7 +361,7 @@ export type PlantUpdateInput = {
   wateringFrequency?: Prisma.IntFieldUpdateOperationsInput | number
   lightPreference?: Prisma.StringFieldUpdateOperationsInput | string
   personality?: Prisma.StringFieldUpdateOperationsInput | string
-  lastWateredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastWateredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   streak?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -374,7 +374,7 @@ export type PlantUncheckedUpdateInput = {
   wateringFrequency?: Prisma.IntFieldUpdateOperationsInput | number
   lightPreference?: Prisma.StringFieldUpdateOperationsInput | string
   personality?: Prisma.StringFieldUpdateOperationsInput | string
-  lastWateredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastWateredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   streak?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -387,7 +387,7 @@ export type PlantCreateManyInput = {
   wateringFrequency: number
   lightPreference: string
   personality?: string
-  lastWateredAt?: Date | string
+  lastWateredAt?: Date | string | null
   streak?: number
   createdAt?: Date | string
 }
@@ -399,7 +399,7 @@ export type PlantUpdateManyMutationInput = {
   wateringFrequency?: Prisma.IntFieldUpdateOperationsInput | number
   lightPreference?: Prisma.StringFieldUpdateOperationsInput | string
   personality?: Prisma.StringFieldUpdateOperationsInput | string
-  lastWateredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastWateredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   streak?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -412,7 +412,7 @@ export type PlantUncheckedUpdateManyInput = {
   wateringFrequency?: Prisma.IntFieldUpdateOperationsInput | number
   lightPreference?: Prisma.StringFieldUpdateOperationsInput | string
   personality?: Prisma.StringFieldUpdateOperationsInput | string
-  lastWateredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastWateredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   streak?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -482,6 +482,10 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -555,7 +559,7 @@ export type $PlantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     wateringFrequency: number
     lightPreference: string
     personality: string
-    lastWateredAt: Date
+    lastWateredAt: Date | null
     streak: number
     createdAt: Date
   }, ExtArgs["result"]["plant"]>
