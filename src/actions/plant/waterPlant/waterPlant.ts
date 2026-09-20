@@ -4,8 +4,12 @@ import { getDaysSince, wasWateredOnTime } from "@/lib/moodLogic";
 import { prisma } from "@/prisma/prismaClient";
 
 export type WaterPlantResult =
-  | { status: "watered"; plant: Awaited<ReturnType<typeof prisma.plant.update>> }
-  | { status: "already-watered" };
+  | {
+      status: "watered";
+      plant: Awaited<ReturnType<typeof prisma.plant.update>>;
+    }
+  | { status: "already-watered" }
+  | { status: "too-early"; remainingDays: number };
 
 function getCalendarDayKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -28,20 +32,36 @@ export async function waterPlant(id: number): Promise<WaterPlantResult> {
     return { status: "already-watered" };
   }
 
-  const daysSince = getDaysSince(plant.lastWateredAt);
+  if (plant.lastWateredAt) {
+    const daysSince = getDaysSince(plant.lastWateredAt, now.getTime());
+    const remainingDays = Math.max(
+      1,
+      Math.ceil(plant.wateringFrequency - daysSince),
+    );
+
+    if (daysSince < plant.wateringFrequency) {
+      return { status: "too-early", remainingDays };
+    }
+  }
+
+  const daysSince = plant.lastWateredAt
+    ? getDaysSince(plant.lastWateredAt, now.getTime())
+    : 0;
   const calendarDaysSince = plant.lastWateredAt
     ? getCalendarDaysSince(plant.lastWateredAt, now)
-    : null;
+    : 0;
   const onTime = plant.lastWateredAt
     ? wasWateredOnTime(daysSince, plant.wateringFrequency)
-    : false;
+    : true;
 
   const updatedPlant = await prisma.plant.update({
     where: { id },
     data: {
       lastWateredAt: now,
       streak:
-        calendarDaysSince === 1 && onTime ? plant.streak + 1 : 1,
+        plant.lastWateredAt && calendarDaysSince === 1 && onTime
+          ? plant.streak + 1
+          : 1,
     },
   });
 

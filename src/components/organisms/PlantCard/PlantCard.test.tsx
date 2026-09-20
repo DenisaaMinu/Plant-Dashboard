@@ -12,7 +12,7 @@ test("calls onWater with the plant id when the water button is clicked", async (
     wateringFrequency: 7,
     lightPreference: "Bright, indirect light",
     personality: "dramatic",
-    lastWateredAt: new Date(),
+    lastWateredAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     streak: 0,
     createdAt: new Date(),
   };
@@ -29,9 +29,9 @@ test("calls onWater with the plant id when the water button is clicked", async (
     />,
   );
 
-  await expect(screen.getByText("Every 7 days")).toBeVisible();
+  await expect(screen.getByText("Recommended: every 7 days")).toBeVisible();
 
-  await screen.getByRole("button", { name: /mark as watered/i }).click();
+  await screen.getByRole("button", { name: /water \+10 xp/i }).click();
 
   expect(onWater).toHaveBeenCalledWith(42);
 });

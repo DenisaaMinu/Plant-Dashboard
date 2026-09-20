@@ -14,15 +14,21 @@ import {
 import { getVoiceLine } from "@/lib/plantVoice";
 
 const MOOD_STYLES: Record<PlantMood, string> = {
-  healthy: "border-emerald-100 bg-white",
-  needsWaterSoon: "border-amber-200 bg-[#fffaf0]",
-  overdue: "border-rose-200 bg-[#fff7f5]",
+  healthy: "border-emerald-200 bg-gradient-to-b from-emerald-50 via-white to-emerald-50",
+  needsWaterSoon: "border-amber-200 bg-gradient-to-b from-amber-50 via-white to-amber-50",
+  overdue: "border-rose-200 bg-gradient-to-b from-rose-50 via-white to-rose-50",
 };
 
 const MOOD_LABELS: Record<PlantMood, string> = {
   healthy: "Healthy",
   needsWaterSoon: "Needs water soon",
   overdue: "Overdue",
+};
+
+const MOOD_ICONS: Record<PlantMood, string> = {
+  healthy: "✨",
+  needsWaterSoon: "💧",
+  overdue: "⚠️",
 };
 
 type PlantCardProps = {
@@ -47,6 +53,7 @@ export function PlantCard({
   const [editName, setEditName] = useState(plant.name);
   const [editPersonality, setEditPersonality] = useState(plant.personality);
   const [waterMessage, setWaterMessage] = useState<string | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
@@ -58,16 +65,28 @@ export function PlantCard({
   const mood = getMood(daysSince, plant.wateringFrequency);
   const progress = getWateringProgress(daysSince, plant.wateringFrequency);
   const voiceLine = getVoiceLine(plant.personality, mood, daysSince);
+  const isWateredToday = plant.lastWateredAt
+    ? new Date(plant.lastWateredAt).toDateString() === new Date(now).toDateString()
+    : false;
+  const isReadyToWater = !plant.lastWateredAt || daysSince >= plant.wateringFrequency;
+  const daysUntilWatering = Math.max(1, plant.wateringFrequency - daysSince);
 
   async function handleWaterClick() {
     setIsWatering(true);
     setWaterMessage(null);
+    setShowCelebration(false);
     try {
       const result = await onWater(plant.id);
       if (result.status === "already-watered") {
         setWaterMessage("You already watered me today. Come back tomorrow!");
+      } else if (result.status === "too-early") {
+        setWaterMessage(
+          `Too early for a watering reminder — wait about ${result.remainingDays} more day${result.remainingDays === 1 ? "" : "s"}.`,
+        );
       } else {
-        setWaterMessage("Thank you! See you tomorrow for another sip.");
+        setWaterMessage("+10 XP! Your leafy friend is feeling refreshed.");
+        setShowCelebration(true);
+        setTimeout(() => setShowCelebration(false), 900);
       }
     } catch {
       // Failure is surfaced by the parent's alert; nothing more to do here.
@@ -103,15 +122,25 @@ export function PlantCard({
 
   return (
     <article
-      className={`overflow-hidden rounded-3xl border shadow-lg shadow-emerald-950/5 ${MOOD_STYLES[mood]} ${className ?? ""}`.trim()}
+      className={`group relative overflow-hidden rounded-[28px] border shadow-[0_16px_45px_rgba(20,83,45,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(16,84,60,0.12)] ${MOOD_STYLES[mood]} ${className ?? ""}`.trim()}
     >
       {plant.photoUrl ? (
         <img
           src={plant.photoUrl}
           alt={plant.name}
-          className="h-48 w-full object-cover"
+          className="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.03]"
         />
-      ) : <div className="flex h-48 items-center justify-center bg-emerald-50 text-5xl">🌿</div>}
+      ) : (
+        <div className="flex h-48 items-center justify-center bg-gradient-to-br from-emerald-100 to-emerald-50 text-5xl transition duration-500 group-hover:scale-105">
+          🌿
+        </div>
+      )}
+
+      {showCelebration ? (
+        <div className="water-reward absolute left-1/2 top-5 z-10 -translate-x-1/2 rounded-full bg-[#f5c969] px-4 py-2 text-sm font-black text-emerald-950 shadow-lg shadow-emerald-950/20">
+          ✨ +10 XP
+        </div>
+      ) : null}
 
       <div className="p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
@@ -153,7 +182,10 @@ export function PlantCard({
       </p>
 
       <div className="space-y-2 text-sm text-emerald-900/70">
-        <p><span className="font-semibold text-emerald-950">Every {plant.wateringFrequency} days</span> · {plant.lightPreference}</p>
+        <p>
+          <span className="font-semibold text-emerald-950">Recommended: every {plant.wateringFrequency} days</span>
+        </p>
+        <p>{plant.lightPreference}</p>
         <p>🔥 <span className="font-semibold text-emerald-950">{plant.streak}-day streak</span></p>
       </div>
       <p className="mt-4 rounded-xl bg-emerald-50 px-3 py-3 text-sm italic leading-6 text-emerald-900/75">&ldquo;{voiceLine}&rdquo;</p>
@@ -186,11 +218,17 @@ export function PlantCard({
       <button
         type="button"
         onClick={handleWaterClick}
-        disabled={isWatering}
-        aria-disabled={isWatering}
-        className="mt-4 w-full rounded-xl bg-emerald-800 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={isWatering || !isReadyToWater || isWateredToday}
+        aria-disabled={isWatering || !isReadyToWater || isWateredToday}
+        className="mt-4 w-full rounded-xl bg-emerald-800 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-900/25 disabled:text-emerald-900/50"
       >
-        {isWatering ? "Watering..." : "Mark as watered"}
+        {isWatering
+          ? "Watering..."
+          : isWateredToday
+            ? "Watered today"
+            : isReadyToWater
+              ? "Water +10 XP"
+              : `Ready in ${daysUntilWatering} day${daysUntilWatering === 1 ? "" : "s"}`}
       </button>
       <div className="mt-3 flex items-center justify-between gap-3">
         <button type="button" onClick={() => setIsEditing(true)} className="text-sm font-semibold text-emerald-800 hover:text-emerald-950">Edit plant</button>

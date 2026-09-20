@@ -39,7 +39,7 @@ export const Default: Story = {
   },
   play: async ({ canvas, userEvent, args }) => {
     const waterButton = canvas.getByRole("button", {
-      name: /mark as watered/i,
+      name: /water \+10 xp/i,
     });
     await userEvent.click(waterButton);
     await expect(args.onWater).toHaveBeenCalledWith(args.plant.id);
