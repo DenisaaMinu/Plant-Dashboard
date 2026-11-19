@@ -25,12 +25,6 @@ const MOOD_LABELS: Record<PlantMood, string> = {
   overdue: "Overdue",
 };
 
-const MOOD_ICONS: Record<PlantMood, string> = {
-  healthy: "✨",
-  needsWaterSoon: "💧",
-  overdue: "⚠️",
-};
-
 type PlantCardProps = {
   plant: Plant;
   onWater: (id: number) => Promise<WaterPlantResult>;
@@ -125,6 +119,8 @@ export function PlantCard({
       className={`group relative overflow-hidden rounded-[28px] border shadow-[0_16px_45px_rgba(20,83,45,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(16,84,60,0.12)] ${MOOD_STYLES[mood]} ${className ?? ""}`.trim()}
     >
       {plant.photoUrl ? (
+        // photoUrl is a base64 data URL, which next/image cannot optimize.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={plant.photoUrl}
           alt={plant.name}

@@ -137,6 +137,8 @@ export function UploadForm({
         />
 
       {photoDataUrl ? (
+        // Local FileReader preview (data URL); next/image cannot optimize it.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={photoDataUrl}
           alt="Selected plant"

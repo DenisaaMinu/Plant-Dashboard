@@ -8,7 +8,7 @@ import type { UpdatePlantInput } from "@/actions/plant/updatePlant/updatePlant";
 import type { WaterPlantResult } from "@/actions/plant/waterPlant/waterPlant";
 import { PlantCard } from "@/components/organisms/PlantCard/PlantCard";
 import { UploadForm } from "@/components/organisms/UploadForm/UploadForm";
-import { getMood } from "@/lib/moodLogic";
+import { getDaysSince, getMood } from "@/lib/moodLogic";
 
 function coercePlantDates(plant: Plant): Plant {
   return {
@@ -42,15 +42,21 @@ export function PlantDashboard({
   );
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   const overdueCount = plants.filter(
     (plant) =>
       getMood(
-        plant.lastWateredAt
-          ? Math.floor((Date.now() - plant.lastWateredAt.getTime()) / 86400000)
-          : 0,
+        getDaysSince(plant.lastWateredAt, now),
         plant.wateringFrequency,
       ) === "overdue",
   ).length;
+  const thrivingCount = plants.length - overdueCount;
   const activeStreak = plants.reduce(
     (total, plant) => total + plant.streak,
     0,
@@ -61,15 +67,6 @@ export function PlantDashboard({
   );
   const gardenLevel = Math.max(1, Math.floor(gardenXp / 100) + 1);
   const levelProgress = gardenXp % 100;
-  const thrivingCount = plants.filter(
-    (plant) =>
-      getMood(
-        plant.lastWateredAt
-          ? Math.floor((Date.now() - plant.lastWateredAt.getTime()) / 86400000)
-          : 0,
-        plant.wateringFrequency,
-      ) !== "overdue",
-  ).length;
   const questProgress = plants.length
     ? Math.round((thrivingCount / plants.length) * 100)
     : 0;
