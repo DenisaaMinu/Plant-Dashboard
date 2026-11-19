@@ -134,8 +134,8 @@ course reading:
 
 ## 👥 Team
 
-- [Your name here]
-- [Teammate's name here]
+- Denisa Mitcu
+- Rienat Zhuralov
 
 ## 🎓 Course
 
