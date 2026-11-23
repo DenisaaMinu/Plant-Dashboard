@@ -132,9 +132,6 @@ course reading:
 - [`specs/001-plant-dashboard/spec.md`](./specs/001-plant-dashboard/spec.md) — goal, constraints, acceptance criteria
 - [`specs/001-plant-dashboard/plan.md`](./specs/001-plant-dashboard/plan.md) — technical approach and trade-offs
 
-## 👥 Team
-
-- Denisa Mitcu
 
 ## 🎓 Course
 
