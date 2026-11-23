@@ -92,7 +92,7 @@ AGENTS.md
 ### Installation
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/DenisaaMinu/Plant-Dashboard/
 cd plant-care-dashboard
 npm install
 ```
