@@ -135,7 +135,6 @@ course reading:
 ## 👥 Team
 
 - Denisa Mitcu
-- Rienat Zhuralov
 
 ## 🎓 Course
 
